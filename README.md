@@ -2,11 +2,13 @@
 
 ## 📌 Project Overview
 
-This project analyzes the impact of COVID-19 in Peru compared to Latin America and global trends.
+This project analyzes the impact of COVID-19 in Peru compared to selected Latin American, North American, European, and Asian countries.
 
-The project demonstrates an end-to-end analytics workflow:
+The project demonstrates a complete end-to-end Data Analytics & Data Engineering workflow:
 
-Data Ingestion → ETL → Data Warehouse Modeling → Business Intelligence → Analytical Insights
+Raw Data → Staging Layer → ETL Pipeline → Data Warehouse (Star Schema) → BI Dashboard → Advanced Analytics
+
+This project was designed to simulate a real-world analytics architecture using best practices in SQL Server.
 
 ---
 ![SQL Server](https://img.shields.io/badge/SQL%20Server-T--SQL-red)
@@ -24,11 +26,13 @@ Data Ingestion → ETL → Data Warehouse Modeling → Business Intelligence →
 
 ## 🏗 Architecture
 
-Raw CSV Data  
+CSV Dataset (Our World in Data)  
 ↓  
-Staging Layer  
+Staging Schema (Raw ingestion)  
 ↓  
-Data Warehouse (Star Schema)  
+ETL Stored Procedure (Transactional)  
+↓  
+Dimensional Model (Star Schema)  
 ↓  
 Power BI Dashboard  
 ↓  
@@ -36,12 +40,65 @@ Python Analytical Exploration
 
 ---
 
+## 🧠 Data Engineering Highlights
+
+- Modular SQL architecture
+- Fully automated setup via `run_project.bat`
+- Transactional ETL (BEGIN TRAN / COMMIT / ROLLBACK)
+- Error handling with TRY/CATCH
+- Star Schema modeling
+- Surrogate Keys (IDENTITY)
+- Primary & Foreign Key constraints
+- Data cleansing rules
+- Prevention of duplicate inserts
+- Fact table metrics calculation
+- Performance-oriented joins using integer surrogate keys
+
+## 🏛 Data Warehouse Design
+
+### ⭐ Star Schema
+
+#### Dimensions
+
+- `DimCountry`
+- `DimDate`
+
+#### Fact Table
+- `FactCovidDaily`
+
+#### Surrogate Keys
+
+The warehouse uses surrogate keys (`country_id`) to:
+
+- Improve join performance
+- Isolate DW from source system changes
+- Support Slowly Changing Dimensions (future-ready design)
+- Maintain clean star schema structure
+
+## ⚙ ETL Process
+
+The transformation layer is implemented as a stored procedure:
+
+`sp_transform_covid_data`
+
+### ETL Features
+- Data cleansing (removes aggregates like “World”)
+- Country filtering rules
+- NULL handling using COALESCE
+- Duplicate prevention with NOT EXISTS
+- Derived metric calculations:
+   - Mortality Rate
+   - Infection Rate
+   - Vaccination Rate
+- Transaction-safe execution
+
 ## 📊 Business Questions
 
-- How did Peru perform compared to other LATAM countries?
-- What was the mortality rate per million?
-- How did vaccination affect case trends?
-- Which country had the highest recovery growth?
+- How did Peru compare to other LATAM countries?
+- What was the infection rate evolution?
+- Did vaccination impact mortality?
+- Which country showed the fastest recovery?
+- How did case trends vary across regions?
 
 ---
 
@@ -56,16 +113,16 @@ Python Analytical Exploration
 ```
 covid19-latam-analytics/
 
-├── 00_run_all.sql
 ├── run_project.bat
+├── 00_run_all.sql
 │
 ├── sql/
 │ ├── 01_create_database.sql
 │ ├── 02_create_schemas.sql
 │ ├── 03_staging_tables.sql
-│ ├── 04_datawarehouse_tables.sql
-│ ├── 05_etl_procedures.sql
-│ └── 06_views_for_powerbi.sql
+│ ├── 04_load_staging_data.sql
+│ ├── 05_create_dw_tables.sql
+│ └── 06_transform_staging_to_dw.sql
 │
 ├── powerbi/
 │ └── covid_dashboard.pbix
@@ -74,23 +131,22 @@ covid19-latam-analytics/
 │ └── exploratory_analysis.ipynb
 │
 ├── dataset/
-│ └── sample_data.csv
+│ ├── covid_deaths.csv
+│ └── covid_vaccinations.csv
 │
 └── README.md
 ```
 
 ---
 
-# 🚀 Database Setup (Recommended Method)
+## 🚀 How to Run the Project
 
-## Option 1 — Automatic Setup (Recommended)
+### Option 1 — Fully Automated (Recommended)
 
 1. Make sure you have **SQL Server installed**.
 2. Ensure your SQL Server instance name is:
 
    `localhost`
-
-   (If different, edit `run_project.bat` accordingly.)
 
 3. Double-click:
 
@@ -98,41 +154,40 @@ covid19-latam-analytics/
 
 The script will:
 
-- Create the database `CovidDW`
+- Create database `CovidDW`
 - Create required schemas
-- Create staging and DW tables
-- Prepare the environment for ETL
+- Create staging tables
+- Load raw data
+- Create DW tables
+- Execute ETL procedure
+- Populate the star schema
 
 ---
 
-## Option 2 — Manual Execution (SQLCMD Mode in SSMS)
+## Option 2 — Manual Execution (SQLCMD Mode)
 
-1. Open `00_run_all.sql` in SQL Server Management Studio.
+1. Open `00_run_all.sql` in SSMS(SQL Server Management Studio).
 2. Enable:
 
    `Query → SQLCMD Mode`
 
 3. Execute the script.
 
----
-
-## ⚠ Requirements
-
-- SQL Server installed
-- SQLCMD tool available (included with SQL Server)
-- Windows Authentication enabled
 
 ---
+## 🎯 What This Project Demonstrates
 
-## 🎯 Project Highlights
+This project demonstrates practical skills in:
 
-✔ Modular SQL architecture  
-✔ Automated database setup (.bat execution)  
-✔ Star schema design  
-✔ ETL procedures  
-✔ BI dashboard integration  
-✔ Analytical Python exploration  
+✔ Data Modeling  
+✔ Data Engineering  
+✔ ETL Design  
+✔ Dimensional Modeling  
+✔ SQL Performance Optimization  
+✔ BI Integration  
+✔ Analytical Thinking
 
+It simulates how a real production analytics pipeline is structured.
 ---
 
 ## 📊 Data Source
