@@ -3,9 +3,6 @@
    Description: Creates project schemas
    ============================================================ */
 
-USE CovidDW;
-GO
-
 -- Check if the schemas exist
 -- Check schema 'staging'
 IF NOT EXISTS

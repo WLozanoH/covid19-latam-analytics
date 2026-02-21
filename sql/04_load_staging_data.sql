@@ -3,8 +3,7 @@
    Description: Loads raw CSV data into staging tables
    ============================================================ */
 
-
-USE CovidDW;
+SET NOCOUNT ON;
 GO
 
 PRINT 'Starting data load into staging tables...';
@@ -52,7 +51,12 @@ GO
 -- Validation
 -- ============================================
 
+SET NOCOUNT ON;
+GO
+
 PRINT 'Validating row counts...';
+GO
+
 
 SELECT 'CovidDeaths' AS TableName, COUNT(*) AS TotalRows
 FROM staging.CovidDeaths

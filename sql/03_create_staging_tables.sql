@@ -3,8 +3,6 @@
    Description: Creates raw staging tables
    ============================================================ */
 
-USE CovidDW;
-GO
 
 -- ============================================================
 -- STAGING: COVID DEATHS
