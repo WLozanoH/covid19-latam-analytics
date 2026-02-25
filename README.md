@@ -4,11 +4,11 @@
 
 This project analyzes the impact of COVID-19 in Peru compared to selected Latin American, North American, European, and Asian countries.
 
-The project demonstrates a complete end-to-end Data Analytics & Data Engineering workflow:
+It simulates a production-ready Data Engineering & Analytics architecture using SQL Server, following a layered Medallion-style approach:
 
-Raw Data → Staging Layer → ETL Pipeline → Data Warehouse (Star Schema) → BI Dashboard → Advanced Analytics
+Sources → Bronze → Silver → Gold → BI & Advanced Analytics
 
-This project was designed to simulate a real-world analytics architecture using best practices in SQL Server.
+The project demonstrates both Data Engineering and Business Intelligence best practices.
 
 ---
 ![SQL Server](https://img.shields.io/badge/SQL%20Server-T--SQL-red)
@@ -24,56 +24,77 @@ This project was designed to simulate a real-world analytics architecture using 
 
 ---
 
-## 🏗 Architecture
+## 🏗 Data Architecture
 
-CSV Dataset (Our World in Data)  
-↓  
-Staging Schema (Raw ingestion)  
-↓  
-ETL Stored Procedure (Transactional)  
-↓  
-Dimensional Model (Star Schema)  
-↓  
-Power BI Dashboard  
-↓  
-Python Analytical Exploration  
+The project follows a layered architecture:
+
+### 🟤 Bronze Layer (Staging)
+- Raw CSV ingestion using BULK INSERT
+- No transformations applied
+- Schema: `staging`
+
+### 🔵 Silver Layer (Transformation)
+- Implemented via transactional stored procedure
+- Data cleansing and filtering
+- NULL handling (COALESCE)
+- Duplicate prevention
+- Derived metrics calculation
+- TRY/CATCH error handling
+- BEGIN TRAN / COMMIT / ROLLBACK logic
+
+### 🟡 Gold Layer (Data Warehouse)
+- Star Schema modeling
+- Surrogate keys (IDENTITY)
+- Primary & Foreign key constraints
+- Optimized joins
+- Business KPI calculations
 
 ---
 
-## 🧠 Data Engineering Highlights
-
-- Modular SQL architecture
-- Fully automated setup via `run_project.bat`
-- Transactional ETL (BEGIN TRAN / COMMIT / ROLLBACK)
-- Error handling with TRY/CATCH
-- Star Schema modeling
-- Surrogate Keys (IDENTITY)
-- Primary & Foreign Key constraints
-- Data cleansing rules
-- Prevention of duplicate inserts
-- Fact table metrics calculation
-- Performance-oriented joins using integer surrogate keys
-
-## 🏛 Data Warehouse Design
+## 📊 Data Warehouse Model
 
 ### ⭐ Star Schema
 
 #### Dimensions
-
 - `DimCountry`
 - `DimDate`
 
 #### Fact Table
 - `FactCovidDaily`
 
-#### Surrogate Keys
+#### Calculated Metrics
+- Mortality Rate
+- Infection Rate
+- Vaccination Rate
 
-The warehouse uses surrogate keys (`country_id`) to:
+The warehouse is optimized for BI and analytical workloads.
 
-- Improve join performance
-- Isolate DW from source system changes
-- Support Slowly Changing Dimensions (future-ready design)
-- Maintain clean star schema structure
+---
+
+## 🔄 Data Flow (Lineage)
+
+CSV Sources  
+↓  
+Staging Tables  
+↓  
+ETL Stored Procedure (`sp_transform_covid_data`)  
+↓  
+Dimensional Model (Star Schema)  
+↓  
+Power BI Dashboard & Python Analytics  
+
+---
+
+## 🧠 Data Engineering Highlights
+
+✔ Automated setup via `run_project.bat`  
+✔ Transaction-safe ETL pipeline (BEGIN TRAN / COMMIT / ROLLBACK)  
+✔ Error handling with TRY/CATCH  
+✔ Layered architecture (Bronze/Silver/Gold)  
+✔ Data validation & cleansing rules  
+✔ Duplicate prevention with NOT EXISTS  
+✔ Surrogate keys for optimized joins  
+✔ Production-style folder structure
 
 ## ⚙ ETL Process
 
@@ -124,6 +145,10 @@ covid19-latam-analytics/
 │ ├── 05_create_dw_tables.sql
 │ └── 06_transform_staging_to_dw.sql
 │
+├── docs/
+│ ├── data_architecture.png
+│ └── data_flow.png
+│
 ├── powerbi/
 │ └── covid_dashboard.pbix
 │
@@ -141,53 +166,21 @@ covid19-latam-analytics/
 
 ## 🚀 How to Run the Project
 
-### Option 1 — Fully Automated (Recommended)
+### Automated Setup (Recommended)
 
 1. Make sure you have **SQL Server installed**.
-2. Ensure your SQL Server instance name is:
+2. Ensure your SQL Server instance name is: `localhost`
+3. Double-click: `run_project.bat`
 
-   `localhost`
+This will:
 
-3. Double-click:
-
-   `run_project.bat`
-
-The script will:
-
-- Create database `CovidDW`
-- Create required schemas
-- Create staging tables
-- Load raw data
+- Create database
+- Create schemas
+- Load staging data
 - Create DW tables
-- Execute ETL procedure
-- Populate the star schema
+- Execute ETL
+- Populate star schema
 
----
-
-## Option 2 — Manual Execution (SQLCMD Mode)
-
-1. Open `00_run_all.sql` in SSMS(SQL Server Management Studio).
-2. Enable:
-
-   `Query → SQLCMD Mode`
-
-3. Execute the script.
-
-
----
-## 🎯 What This Project Demonstrates
-
-This project demonstrates practical skills in:
-
-✔ Data Modeling  
-✔ Data Engineering  
-✔ ETL Design  
-✔ Dimensional Modeling  
-✔ SQL Performance Optimization  
-✔ BI Integration  
-✔ Analytical Thinking
-
-It simulates how a real production analytics pipeline is structured.
 ---
 
 ## 📊 Data Source
