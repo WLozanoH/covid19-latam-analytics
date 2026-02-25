@@ -28,60 +28,13 @@ The project demonstrates both Data Engineering and Business Intelligence best pr
 
 The project follows a layered architecture:
 
-### 🟤 Bronze Layer (Staging)
-- Raw CSV ingestion using BULK INSERT
-- No transformations applied
-- Schema: `staging`
-
-### 🔵 Silver Layer (Transformation)
-- Implemented via transactional stored procedure
-- Data cleansing and filtering
-- NULL handling (COALESCE)
-- Duplicate prevention
-- Derived metrics calculation
-- TRY/CATCH error handling
-- BEGIN TRAN / COMMIT / ROLLBACK logic
-
-### 🟡 Gold Layer (Data Warehouse)
-- Star Schema modeling
-- Surrogate keys (IDENTITY)
-- Primary & Foreign key constraints
-- Optimized joins
-- Business KPI calculations
-
----
-
-## 📊 Data Warehouse Model
-
-### ⭐ Star Schema
-
-#### Dimensions
-- `DimCountry`
-- `DimDate`
-
-#### Fact Table
-- `FactCovidDaily`
-
-#### Calculated Metrics
-- Mortality Rate
-- Infection Rate
-- Vaccination Rate
-
-The warehouse is optimized for BI and analytical workloads.
+![Data Architecture](docs/data_architecture.png)
 
 ---
 
 ## 🔄 Data Flow (Lineage)
 
-CSV Sources  
-↓  
-Staging Tables  
-↓  
-ETL Stored Procedure (`sp_transform_covid_data`)  
-↓  
-Dimensional Model (Star Schema)  
-↓  
-Power BI Dashboard & Python Analytics  
+![Data Flow](docs/dataflow.png)
 
 ---
 
@@ -96,6 +49,16 @@ Power BI Dashboard & Python Analytics
 ✔ Surrogate keys for optimized joins  
 ✔ Production-style folder structure
 
+---
+
+## 📈 Technical Metrics
+
+- Rows processed: 858,870 rows
+- Countries analyzed: 10+ countries across LATAM, NA, EU & Asia
+- Date range: 2020 – 2024
+- Full ETL runtime: ~5 seconds on local SQL Server instance
+
+---
 ## ⚙ ETL Process
 
 The transformation layer is implemented as a stored procedure:
@@ -147,7 +110,7 @@ covid19-latam-analytics/
 │
 ├── docs/
 │ ├── data_architecture.png
-│ └── data_flow.png
+│ └── dataflow.png
 │
 ├── powerbi/
 │ └── covid_dashboard.pbix
@@ -156,8 +119,7 @@ covid19-latam-analytics/
 │ └── exploratory_analysis.ipynb
 │
 ├── dataset/
-│ ├── covid_deaths.csv
-│ └── covid_vaccinations.csv
+│ └── full.zip   ← Compressed dataset
 │
 └── README.md
 ```
@@ -165,6 +127,19 @@ covid19-latam-analytics/
 ---
 
 ## 🚀 How to Run the Project
+
+⚠ Important — Dataset Setup  
+The dataset is compressed inside: `dataset/full.zip`
+
+Before running the project:
+
+1. Navigate to the dataset folder
+2. Extract full.zip
+3. Ensure the following files are available inside `dataset/full/:`
+   * covid_deaths.csv
+   * covid_vaccinations.csv
+
+Once extracted, proceed with execution.
 
 ### Automated Setup (Recommended)
 
@@ -183,6 +158,18 @@ This will:
 
 ---
 
+## 💡 Skills Demonstrated
+
+- Data Warehouse Design
+- ETL Development (T-SQL)
+- Transaction Management
+- Data Cleaning & Validation
+- Star Schema Modeling
+- Business KPI Design
+- BI Dashboard Development
+- Git Version Control
+
+---
 ## 📊 Data Source
 
 [Our World in Data – COVID-19 Dataset](https://ourworldindata.org/coronavirus)
